@@ -1,5 +1,8 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import logging
+import time
+import os
+
 import torch
 from tqdm import tqdm
 
@@ -22,7 +25,7 @@ def compute_on_dataset(model, data_loader, device, timer=None):
                 timer.tic()
             output = model(images)
             if timer:
-                torch.cuda.synchronize()
+                synchronize()
                 timer.toc()
             output = [o.to(cpu_device) for o in output]
         results_dict.update(
@@ -59,7 +62,7 @@ def inference(
         dataset_name,
         iou_types=("bbox",),
         box_only=False,
-        device="cuda",
+        device='cuda' if torch.cuda.is_available() else 'cpu',
         expected_results=(),
         expected_results_sigma_tol=4,
         output_folder=None,
@@ -67,7 +70,7 @@ def inference(
 
     logger = logging.getLogger("maskrcnn_benchmark.inference")
     dataset = data_loader.dataset
-    # logger.info("Start evaluation on {} dataset({} images).".format(dataset_name, len(dataset)))
+    logger.info("Start evaluation on {} dataset({} images).".format(dataset_name, len(dataset)))
 
     extra_args = dict(
         box_only=box_only,
@@ -75,19 +78,17 @@ def inference(
         expected_results=expected_results,
         expected_results_sigma_tol=expected_results_sigma_tol,
     )
-
-    """
+    
     # load predictions if exists
     prediction_file = os.path.join(output_folder, 'predictions.pth')
     if os.path.isfile(prediction_file):
         predictions = torch.load(prediction_file)
-        logger.info("Found prediction results at {}".format(prediction_file))
+        logger.info("\n\n\n\n\nAlready found prediction results at output/[dataset_name]/inference: {}\n\n\n\n".format(prediction_file))
 
         return evaluate(dataset=dataset,
                         predictions=predictions,
                         output_folder=output_folder,
                         **extra_args)
-    """
 
     # convert to a torch.device for efficiency
     device = torch.device(device)
@@ -100,15 +101,12 @@ def inference(
     synchronize()
     total_time = total_timer.toc()
     total_time_str = get_time_str(total_time)
-    """
     logger.info(
         "Total run time: {} ({} s / img per device, on {} devices)".format(
             total_time_str, total_time * num_devices / len(dataset), num_devices
         )
     )
-    """
     total_infer_time = get_time_str(inference_timer.total_time)
-    """
     logger.info(
         "Model inference time: {} ({} s / img per device, on {} devices)".format(
             total_infer_time,
@@ -116,16 +114,13 @@ def inference(
             num_devices,
         )
     )
-    """
 
     predictions = _accumulate_predictions_from_multiple_gpus(predictions)
     if not is_main_process():
         return
 
-    """
     if output_folder:
         torch.save(predictions, os.path.join(output_folder, "predictions.pth"))
-    """
 
 
     return evaluate(dataset=dataset,

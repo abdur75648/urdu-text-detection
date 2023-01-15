@@ -7,7 +7,7 @@ class DatasetCatalog(object):
     DATA_DIR = ""
     DATASETS = {
         "ic15_test": (
-            "",
+            "img",
             "maskrcnn_benchmark/engine/test.json"
         )
 }

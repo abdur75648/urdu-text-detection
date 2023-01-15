@@ -351,7 +351,7 @@ def boundary_to_mask_ctw(bo_x,bo_y, name, num, image_name_name,p_temp_box):
 def mask_to_roRect(mask, img_shape):
     ## convert mask into rotated rect
     e = mask[0, :, :]
-    _, countours, hier = cv2.findContours(e.clone().numpy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)  # Aarlog
+    countours, hier = cv2.findContours(e.clone().numpy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)  # Aarlog
     if len(countours) == 0:
         return np.zeros((1, 8))
     t_c = countours[0].copy()
@@ -362,7 +362,7 @@ def mask_to_roRect(mask, img_shape):
 def mask_to_contours(mask, img_shape):
     e = mask[0, :, :]
 
-    _, countours, hier = cv2.findContours(e.clone().numpy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)  # Aarlog
+    countours, hier = cv2.findContours(e.clone().numpy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)  # Aarlog
 
     if len(countours) == 0:
         return np.zeros((1, 8))

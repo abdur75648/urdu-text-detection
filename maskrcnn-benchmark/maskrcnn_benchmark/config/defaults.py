@@ -1,6 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import os
-
+import torch
 from yacs.config import CfgNode as CN
 
 
@@ -29,7 +29,7 @@ _C.MODEL.BOUNDARY_ON = False
 _C.MODEL.MSR_ON = False
 _C.MODEL.RETINANET_ON = False
 _C.MODEL.KEYPOINT_ON = False
-_C.MODEL.DEVICE = "cpu"
+_C.MODEL.DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 _C.MODEL.META_ARCHITECTURE = "GeneralizedRCNN"
 _C.MODEL.CLS_AGNOSTIC_BBOX_REG = False
 

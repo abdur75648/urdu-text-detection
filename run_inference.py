@@ -4,6 +4,7 @@ from tqdm import tqdm
 from PIL import Image, ImageDraw
 
 import torch
+import numpy as np
 from maskrcnn_benchmark.config import cfg
 from maskrcnn_benchmark.data import make_data_loader
 from maskrcnn_benchmark.engine.inference import inference
@@ -49,7 +50,6 @@ if __name__ == "__main__":
 
     checkpointer = DetectronCheckpointer(cfg, model, last_checkpoint_file=last_checkpoint_file,save_dir=output_dir)
     _ = checkpointer.load(cfg.MODEL.WEIGHT)
-
     
     test_img = Image.open("test.jpg")
     test_w,test_h = test_img.size
@@ -71,6 +71,10 @@ if __name__ == "__main__":
     if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
             output_folder = "vis"
+            if os.path.exists(output_folder):
+                print("Output folder already exists. Overwriting...")
+                import shutil
+                shutil.rmtree(output_folder)
             mkdir(output_folder)
             output_folders[idx] = output_folder
 
@@ -95,16 +99,23 @@ if __name__ == "__main__":
         bboxes.append(detection["seg_rorect"])
     bboxes = sorted(bboxes,key=lambda x:x[1])
 
-    print("\n###Cropping Image###\n")
     image = Image.open("test.jpg")
+    # Draw the bounding boxes on the image
+    draw = ImageDraw.Draw(image)
     for num_box,points in enumerate(tqdm(bboxes)):
         min_x = min(points[0::2])
         max_x = max(points[0::2])
         min_y = min(points[1::2])
         max_y = max(points[1::2])
-        im_cropped = image.crop((int(min_x), int(min_y), int(max_x), int(max_y)))
-        im_cropped.save(f"vis/{str(num_box+1).zfill(3)}_test.jpg")
-
+        
+        # For drawing the bounding boxes
+        color = tuple([int(x) for x in np.random.randint(0, 256, 3)])
+        draw.rectangle(((min_x, min_y), (max_x, max_y)), outline=color, width=10)
+        
+        # For saving the cropped image
+        # im_cropped = image.crop((int(min_x), int(min_y), int(max_x), int(max_y)))
+        # im_cropped.save(f"vis/{str(num_box+1).zfill(3)}_test.jpg")
+    
+    image.save("vis/test.jpg")
     os.remove("maskrcnn_benchmark/engine/test.json")
-
-    print("\n### Completed Inference###")
+    print("### Completed Inference###")

@@ -7,6 +7,8 @@ from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
 from maskrcnn_benchmark.structures.ke import textKES
 from maskrcnn_benchmark.structures.mty import MTY
 
+trans = torchvision.transforms.ToPILImage()
+
 DEBUG = 0
 
 class WordDataset(torchvision.datasets.coco.CocoDetection):
@@ -62,6 +64,8 @@ class WordDataset(torchvision.datasets.coco.CocoDetection):
 
     def __getitem__(self, idx):
         img, anno = super(WordDataset, self).__getitem__(idx)
+        if "PIL" not in str(type(img)):
+            img = trans(img)
         # filter crowd annotations
         # TODO might be better to add an extra field
         anno = [obj for obj in anno if obj["iscrowd"] == 0]

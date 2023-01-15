@@ -1,0 +1,10 @@
+vis/*
+apex/*
+maskrcnn_benchmark/*
+maskrcnn-benchmark/maskrcnn_benchmark/_C*.so
+maskrcnn-benchmark/maskrcnn_benchmark.egg-info/*
+*/__pycache__/*
+*/.github
+*/.git
+__pycache__/*
+contourNet_model.pth

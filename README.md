@@ -3,22 +3,23 @@
 **Released as a supplement of [UTRNet: High-Resolution Urdu Text Recognition](https://github.com/abdur75648/UTRNet-High-Resolution-Urdu-Text-Recognition)**
 
 [![UTRNet](https://img.shields.io/badge/UTRNet:%20High--Resolution%20Urdu%20Text%20Recognition-blueviolet?logo=github&style=flat-square)](https://github.com/abdur75648/UTRNet-High-Resolution-Urdu-Text-Recognition)
-[![Website](https://img.shields.io/badge/Website-Visit%20Here-brightgreen?style=flat-square)](https://abdur75648.github.io/UTRNet/)
+[![Website](https://img.shields.io/badge/Website-Visit%20Here-darkgreen?style=flat-square)](https://abdur75648.github.io/UTRNet/)
 [![arXiv](https://img.shields.io/badge/arXiv-2306.15782-darkred.svg)](https://arxiv.org/abs/2306.15782)
+[![SpringerLink](https://img.shields.io/badge/Springer-Page-darkblue.svg)](https://link.springer.com/chapter/10.1007/978-3-031-41734-4_19)
+[![SpringerLink](https://img.shields.io/badge/Springer-PDF-blue.svg)](https://rdcu.be/dkbIF)
+[![Demo](https://img.shields.io/badge/Demo-Online-brightgreen.svg)](https://abdur75648-urduocr-utrnet.hf.space)
 
 ## Steps to run the code
-***Note** - Due to several dependency issues in maskrcnn-benchmark, a dockerizes version has been released*
+***Note** - Due to several dependency issues in [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark), YoloV8 is used for text line detection. The model is finetuned on the [UrduDoc](https://paperswithcode.com/dataset/urdudoc) dataset.
 
 * Clone the repository
-* Download trained model (contourNet_model.pth) from [here](https://csciitd-my.sharepoint.com/:u:/g/personal/ch7190150_iitd_ac_in/EbHAIISEi_xFoB_WFP4z2WwBoit3lZwffrVt5vXyFoQpiQ?e=NgxeVh)
-* Run the following commands in the terminal
-    * ```docker build -t ocr_docker .```
-    * ```docker run -it --name ocr_app -v /Users/abdur/Desktop/cn_inference:/cn_inference ocr_docker```
-    * ```cd cn_inference```
-    * ```export INSTALL_DIR=$PWD```
-    * ```cd $INSTALL_DIR && cd maskrcnn-benchmark && python3 setup.py build develop && cd $INSTALL_DIR```
-    * ```unset INSTALL_DIR```
-    * ```cp -r maskrcnn-benchmark/maskrcnn_benchmark .```
+* Install the dependencies
+    ```bash
+    pip install torch==2.0.1 ultralytics==8.1.8
+    ```
+* Put `test.jpg`
+* Run `python3 detect.py`
+* The output will be saved as `output.jpg`
 
 ## Note
 The code & trained model is for research purposes only and must not be used for any other purpose without the author's explicit permission.

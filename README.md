@@ -17,6 +17,7 @@
     ```bash
     pip install torch==2.0.1 ultralytics==8.1.8
     ```
+* Download [yolov8m_UrduDoc.pt](https://github.com/abdur75648/urdu-text-detection/releases/download/v1.0.0/yolov8m_UrduDoc.pt)
 * Put `test.jpg`
 * Run `python3 detect.py`
 * The output will be saved as `output.jpg`
